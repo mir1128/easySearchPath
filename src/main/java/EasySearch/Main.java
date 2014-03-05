@@ -51,7 +51,7 @@ public class Main {
         Coordinate coordinate = translateInputMessage(receiveMessage.trim(), new Coordinate(currentPositionX, currentPositionY));
 
         boolean isFinished = false;
-        while (coordinate != null && !isFinished){
+        while (!isFinished){
             String currentPosition = Coordinate.value2String(new Coordinate(currentPositionX, currentPositionY));
             if (!mapInfo.isMovementValid(currentPosition, Coordinate.value2String(coordinate), 1)){
                 server.sendMessage("invalid movement.");
@@ -61,6 +61,8 @@ public class Main {
                 currentPositionX      = coordinate.getX();
                 currentPositionY   = coordinate.getY();
 
+                isFinished = true;
+
                 if (currentPositionX == targetPositionX && currentPositionY == targetPositionY){
                     server.sendMessage("Great!!!!! You made it!");
                 }
@@ -68,5 +70,7 @@ public class Main {
             receiveMessage = server.receiveMessage();
             coordinate = translateInputMessage(receiveMessage.trim(), new Coordinate(currentPositionX, currentPositionY));
         }
+
+        System.out.println("finished!");
     }
 }
