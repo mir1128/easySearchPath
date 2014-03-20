@@ -49,28 +49,28 @@ public class Main {
 
         String receiveMessage = server.receiveMessage();
         Coordinate coordinate = translateInputMessage(receiveMessage.trim(), new Coordinate(currentPositionX, currentPositionY));
+        while (coordinate == null){
+            server.sendMessage("invalid movement.");
+        }
 
         boolean isFinished = false;
         while (!isFinished){
             String currentPosition = Coordinate.value2String(new Coordinate(currentPositionX, currentPositionY));
-            if (!mapInfo.isMovementValid(currentPosition, Coordinate.value2String(coordinate), 1)){
-                server.sendMessage("invalid movement.");
-            }
-            else {
+            if (mapInfo.isMovementValid(currentPosition, Coordinate.value2String(coordinate), 1)) {
                 MapViewer.display(mapInfo, coordinate.getX(), coordinate.getY(), targetPositionX, targetPositionY);
                 currentPositionX      = coordinate.getX();
                 currentPositionY   = coordinate.getY();
 
-                isFinished = true;
-
                 if (currentPositionX == targetPositionX && currentPositionY == targetPositionY){
+                    isFinished = true;
                     server.sendMessage("Great!!!!! You made it!");
                 }
+            } else {
+                server.sendMessage("invalid movement.");
             }
             receiveMessage = server.receiveMessage();
             coordinate = translateInputMessage(receiveMessage.trim(), new Coordinate(currentPositionX, currentPositionY));
+            server.sendMessage("finished.");
         }
-
-        System.out.println("finished!");
     }
 }
